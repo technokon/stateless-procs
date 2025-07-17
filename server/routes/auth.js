@@ -49,4 +49,39 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// POST /api/auth/login
+router.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Check for existing user
+        const existingUser = await User.findOne({ username });
+        if (!existingUser) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        // keep going match credentials
+        const isMatch = await bcrypt.compare(password, existingUser.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        // create a token for session
+        const token = jwt.sign(
+            { id: existingUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES }
+        );
+        // send this back
+        res.status(200).json({
+            token,
+            user: {
+                id: existingUser._id,
+                username: existingUser.username,
+                email: existingUser.email,
+            }
+        });
+    } catch (err) {
+        res.status(500).json({error: `Something went wrong, ${err.message}`});
+    }
+});
+
 module.exports = router;
