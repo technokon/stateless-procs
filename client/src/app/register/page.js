@@ -26,7 +26,7 @@ export default function Register() {
         e.preventDefault();
         setError('');
         setLoading(true);
-        axios.post('http://localhost:5000/api/auth/register', form)
+        axios.post('http://localhost:5000/api/auth/register', form, { withCredentials: true })
             .then(res => {
                 console.log('Response back', res.data);
                 setUser(res.data);

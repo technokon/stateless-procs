@@ -36,16 +36,23 @@ router.post('/register', async (req, res) => {
         );
 
         // send this back
-        res.status(201).json({
-            token,
-            user: {
-                id: newUser._id,
-                username: newUser.username,
-                email: newUser.email,
-            }
-        });
+        res
+            .status(201)
+            .cookie('token', token, {
+                httpOnly: true,
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 1000
+            })
+            .json({
+                token,
+                user: {
+                    id: newUser._id,
+                    username: newUser.username,
+                    email: newUser.email,
+                }
+            });
     } catch (err) {
-        res.status(500).json({error: `Something went wrong, ${err.message}`});
+        res.status(500).json({ error: `Something went wrong, ${err.message}` });
     }
 });
 
@@ -71,16 +78,23 @@ router.post('/login', async (req, res) => {
             { expiresIn: process.env.JWT_EXPIRES }
         );
         // send this back
-        res.status(200).json({
-            token,
-            user: {
-                id: existingUser._id,
-                username: existingUser.username,
-                email: existingUser.email,
-            }
-        });
+        res
+            .status(200)
+            .cookie('token', token, {
+                httpOnly: true,
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 1000
+            })
+            .json({
+                token,
+                user: {
+                    id: existingUser._id,
+                    username: existingUser.username,
+                    email: existingUser.email,
+                }
+            });
     } catch (err) {
-        res.status(500).json({error: `Something went wrong, ${err.message}`});
+        res.status(500).json({ error: `Something went wrong, ${err.message}` });
     }
 });
 

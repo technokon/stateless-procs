@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Loader } from '@/components/Loader';
 import { Error } from '@/components/Error';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+    const router = useRouter();
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
     const [form, setForm] = useState({
@@ -22,7 +24,7 @@ export default function Login() {
     const onSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
-        axios.post('http://localhost:5000/api/auth/login', form)
+        axios.post('http://localhost:5000/api/auth/login', form, { withCredentials: true })
             .then(res => {
                 console.log('Response back', res.data);
                 setUser(res.data);
@@ -35,11 +37,19 @@ export default function Login() {
                 setLoading(false);
             });
     }
+
+    useEffect(() => {
+        if (user) {
+            setTimeout(() => {
+                router.push('/');
+            }, 3000);
+        }
+    }, [user]);
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <div className="max-w-md w-full bg-white p-6 rounded-lg shadow-md">
-                <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
-                {!loading && (
+                <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">{ !user ? 'Login' : 'Thank you!' }</h1>
+                {!loading && !user && (
                     <form onSubmit={onSubmit} className="space-y-4">
                         <div>
                             <label htmlFor="username"
