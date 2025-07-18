@@ -5,16 +5,14 @@ export default function Dashboard() {
                 <div className="flex justify-center">
                     <table>
                         <thead>
-                        <th>
-                            <tr>
-                                <th>
-                                    username
-                                </th>
-                                <th>
-                                    email
-                                </th>
-                            </tr>
-                        </th>
+                        <tr>
+                            <th>
+                                username
+                            </th>
+                            <th>
+                                email
+                            </th>
+                        </tr>
                         </thead>
                         <tbody>
                         <tr>
