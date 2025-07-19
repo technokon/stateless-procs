@@ -20,6 +20,9 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json());
+// parse cookies
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // Routes placeholders
 app.get('/', (req, res) => {
@@ -32,8 +35,12 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
+
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
+
+const userRoutes = require('./routes/user');
+app.use('/api/user', userRoutes);
 
 /*
 mongo

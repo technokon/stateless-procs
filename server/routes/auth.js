@@ -40,7 +40,8 @@ router.post('/register', async (req, res) => {
             .status(201)
             .cookie('token', token, {
                 httpOnly: true,
-                sameSite: 'strict',
+                sameSite: 'Strict',
+                secure: false,
                 maxAge: 60 * 60 * 1000
             })
             .json({
@@ -82,7 +83,8 @@ router.post('/login', async (req, res) => {
             .status(200)
             .cookie('token', token, {
                 httpOnly: true,
-                sameSite: 'strict',
+                sameSite: 'Strict',
+                secure: true,
                 maxAge: 60 * 60 * 1000
             })
             .json({
