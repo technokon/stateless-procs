@@ -42,6 +42,7 @@ export default function Login() {
         if (user) {
             setTimeout(() => {
                 router.push('/');
+                router.refresh();
             }, 3000);
         }
     }, [user]);

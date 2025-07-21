@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const verifyToken = require('../middleware/verifyToken');
 
 const router = express.Router();
 
@@ -98,6 +99,21 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: `Something went wrong, ${err.message}` });
     }
+});
+
+// POST /api/auth/logout
+router.post('/logout', verifyToken, async (req, res) => {
+    res.clearCookie('token', {
+       httpOnly: true,
+       sameSite: 'Strict',
+       secure: true,
+    });
+    // send this back
+    res
+        .status(200)
+        .json({
+            message: 'Logged out Successfully!'
+        });
 });
 
 module.exports = router;
