@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { Loader } from '@/components/Loader';
 import { Error } from '@/components/Error';
+import { SessionContext } from '@/components/ClientSession';
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
@@ -13,6 +14,7 @@ export default function Register() {
         email: '',
         password: '',
     });
+    const { setSession } = useContext(SessionContext);
 
     const handleChange = (e) => {
         setForm(form => ({
@@ -30,6 +32,7 @@ export default function Register() {
             .then(res => {
                 console.log('Response back', res.data);
                 setUser(res.data);
+                setSession(true);
             })
             .catch(err => {
                 setError(err.response.data?.message || 'Registration Failed!');

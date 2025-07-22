@@ -1,15 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Loader } from '@/components/Loader';
 import { Error } from '@/components/Error';
 import { useRouter } from 'next/navigation';
+import { SessionContext } from '@/components/ClientSession';
 
 export default function Login() {
     const router = useRouter();
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
+    const { setSession } = useContext(SessionContext);
     const [form, setForm] = useState({
         username: '',
         password: '',
@@ -28,6 +30,7 @@ export default function Login() {
             .then(res => {
                 console.log('Response back', res.data);
                 setUser(res.data);
+                setSession(true);
             })
             .catch(err => {
                 setError(err.response.data?.message || 'Login Failed!');
@@ -42,7 +45,6 @@ export default function Login() {
         if (user) {
             setTimeout(() => {
                 router.push('/');
-                router.refresh();
             }, 3000);
         }
     }, [user]);

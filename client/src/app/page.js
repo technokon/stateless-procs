@@ -1,5 +1,6 @@
 
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 
 export default async function Home() {
     const cookieStore = await cookies();
@@ -11,16 +12,16 @@ export default async function Home() {
                 {!token && (
                     <>
                         <div className="flex gap-4 items-center flex-col sm:flex-row">
-                            <a href="/register">Registration</a>
+                            <Link key="registration" href="/register">Registration</Link>
                         </div>
                         <div className="flex gap-4 items-center flex-col sm:flex-row">
-                            <a href="/login">Login</a>
+                            <Link key="login" href="/login">Login</Link>
                         </div>
                     </>
                 )}
                 {token && (
                     <div className="flex gap-4 items-center flex-col sm:flex-row">
-                        <a href="/dashboard">Dashboard</a>
+                        <Link key="dashboard" href="/dashboard">Dashboard</Link>
                     </div>
                 )}
             </main>

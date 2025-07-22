@@ -116,4 +116,14 @@ router.post('/logout', verifyToken, async (req, res) => {
         });
 });
 
+// GET /api/auth/status
+router.get('/status', verifyToken, async (req, res) => {
+    // send back boolean
+    res
+        .status(200)
+        .json({
+            loggedIn: true,
+        });
+});
+
 module.exports = router;
