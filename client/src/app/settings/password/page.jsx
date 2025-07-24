@@ -3,11 +3,13 @@
 import { Error } from '@/components/Error';
 import { Loader } from '@/components/Loader';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Password() {
     const [form, setForm] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
     const handleChange = (e) => {
         setForm(data => ({
             ...data,
@@ -18,6 +20,17 @@ export default function Password() {
         e.preventDefault();
         if (error) return;
         console.log('submitting...');
+        setLoading(true);
+        axios.put('http://localhost:5000/api/auth/password', form, { withCredentials: true })
+            .then((res) => {
+                console.log('Response back', res.data);
+                setSuccess(true);
+            })
+            .catch(err => {
+                setError(err.response.data?.message || 'Error updating password!');
+                setSuccess(false);
+            })
+            .finally(() => setLoading(false));
     }
     useEffect(() => {
         const { existingPassword, password, repeatPassword } = form;
@@ -33,7 +46,7 @@ export default function Password() {
     return (
         <>
             <h2 className="text-1xl font-bold mb-6 text-center text-gray-800">Change your password</h2>
-            {!loading && (
+            {!loading && !success && (
                 <form onSubmit={onSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="existing-password"
@@ -60,6 +73,7 @@ export default function Password() {
                 </form>
             )}
             {loading && <Loader/>}
+            { success && <div>Password updated!</div> }
         </>
     )
 };

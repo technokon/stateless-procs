@@ -126,4 +126,45 @@ router.get('/status', verifyToken, async (req, res) => {
         });
 });
 
+// PUT /api/auth/password - password change
+router.put('/password', verifyToken, async (req, res) => {
+    try {
+        const { id } = req.user;
+        // Get user
+        const user = await User.findById(id);
+
+        if (!user) { return res.status(401).json({ message: 'Invalid Credentials' }); }
+
+        // match password
+        const { existingPassword, password, repeatPassword } = req.body;
+        if (!existingPassword || !password || !repeatPassword) {
+            return res.status(401).json({ message: 'Please provide credentials' });
+        }
+        // check passwords for match
+        if (password !== repeatPassword) {
+            return res.status(401).json({ message: 'Passwords do not match' });
+        }
+        // keep going match credentials
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // update user
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        user.password = hashedPassword;
+        await user.save();
+
+        // send this back
+        res
+            .status(200)
+            .json({
+                message: 'Credentials updates sucessfully',
+            });
+    } catch (err) {
+        res.status(500).json({ error: `Something went wrong, ${err.message}` });
+    }
+});
+
 module.exports = router;
