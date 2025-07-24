@@ -15,17 +15,20 @@ export default function Password() {
         }));
     }
     const onSubmit = (e) => {
-        const { password, repeatPassword } = form;
         e.preventDefault();
+        if (error) return;
+        console.log('submitting...');
     }
     useEffect(() => {
-        const { password, repeatPassword } = form;
-        if (password !== repeatPassword) {
+        const { existingPassword, password, repeatPassword } = form;
+        if (password && repeatPassword && password !== repeatPassword) {
             setError('Passwords do not match!');
+        } else if (existingPassword && existingPassword === password) {
+            setError('Existing password is the same as new');
         } else {
             setError('');
         }
-    }, [form.password, form.repeatPassword])
+    }, [form.password, form.repeatPassword, form.existingPassword])
 
     return (
         <>
