@@ -1,3 +1,3 @@
-export const Error = ({ error }) => {
-    return <div>Error occurred: {error}</div>
+export const Error = ({ error, title = 'Error occurred' }) => {
+    return <div>{ title ? `${title}: ` : '' } {error}</div>
 }
