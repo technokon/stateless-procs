@@ -145,7 +145,7 @@ router.put('/password', verifyToken, async (req, res) => {
             return res.status(401).json({ message: 'Passwords do not match' });
         }
         // keep going match credentials
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(existingPassword, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
