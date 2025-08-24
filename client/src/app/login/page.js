@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Loader } from '@/components/Loader';
 import { Error } from '@/components/Error';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SessionContext } from '@/components/ClientSession';
 
 export default function Login() {
@@ -23,6 +23,9 @@ export default function Login() {
             [e.target.name]: e.target.value,
         }));
     };
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get('redirectTo') || '/';
+
     const onSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
@@ -42,9 +45,13 @@ export default function Login() {
     }
 
     useEffect(() => {
+      setSession(false);
+    }, []);
+
+    useEffect(() => {
         if (user) {
             setTimeout(() => {
-                router.push('/');
+                router.push(redirectTo);
             }, 3000);
         }
     }, [user]);
