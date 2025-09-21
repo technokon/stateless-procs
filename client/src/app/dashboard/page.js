@@ -3,6 +3,7 @@ import { Error } from '@/components/Error'
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
+import Link from 'next/link';
 
 export default async function Dashboard() {
   const cookieStore = await cookies();
@@ -45,9 +46,13 @@ export default async function Dashboard() {
             </thead>
             <tbody>
               {
-                users.map(({ username, email }) => (
+                users.map(({ username, email, _id }) => (
                   <tr key={username}>
-                    <td className="text-left">{username}</td>
+                    <td className="text-left">
+                      <Link href={`/dashboard/user-details/${_id}`}>
+                        {username}
+                      </Link>
+                    </td>
                     <td className="text-left">{email}</td>
                   </tr>
                 ))
